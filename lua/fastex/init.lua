@@ -1,15 +1,15 @@
 local M = {}
 
 
-M.setup = function(opts)
+M.setup = function()
     local autosnippets = {}
     local sources = {
         "greek",
-        "junction",
+        "junctions",
         "language",
         "mappings",
         "mathbb",
-        "perations",
+        "operations",
         "quantors",
         "regex",
         "relations",

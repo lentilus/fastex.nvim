@@ -1,6 +1,6 @@
 local ls = require("luasnip")
 local i = ls.insert_node
-local helper = require("latex.luasnip_helpers")
+local helper = require("fastex.luasnip_helpers")
 local line_start = helper.line_start
 local line_running = helper.line_running
 local math = helper.math

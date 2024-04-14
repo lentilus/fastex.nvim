@@ -24,12 +24,12 @@ return {
         d(1, get_visual)
     }, math),
 
-    ssnip("(%S+)%s?;%s?(%S+) d", "d(<>,<>) ", {
+    ssnip("(%S+)%s?[;,]%s?(%S+) d", "d(<>,<>) ", {
     f(function(_, snip) return snip.captures[1] end),
     f(function(_, snip) return snip.captures[2] end)
     }, math),
 
-    ssnip("(%S+)%s?;%s?(%S+) t", "(<>,<>) ", {
+    ssnip("(%S+)%s?[;,]%s?(%S+) t", "(<>,<>) ", {
     f(function(_, snip) return snip.captures[1] end),
     f(function(_, snip) return snip.captures[2] end)
     }, math),
@@ -43,27 +43,27 @@ return {
         f(function(_, snip) return snip.captures[2] end),
     }, not_math),
 
-    ssnip("(%S+)jj(.)", "<>_<> ", {
+    ssnip("(%S+)j(%w)", "<>_<> ", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
     }, math),
 
-    ssnip("(%S+)kk(.)", "<>^<> ", {
+    ssnip("(%S+)k(%w)", "<>^<> ", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
     }, math),
 
-    ssnip("(%S+)jk(.)(.)", "<>_<>^<> ", {
+    ssnip("(%S+)l(%w)(%w)", "<>_<>^<> ", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
         f(function(_, snip) return snip.captures[3] end),
     }, math),
 
-    ssnip("(%S+)JJ", "<>_{<>} ", { f(function(_, snip) return snip.captures[1] end), i(1, "sub") }, math),
+    ssnip("(%S+)J", "<>_{<>} ", { f(function(_, snip) return snip.captures[1] end), i(1, "sub") }, math),
 
-    ssnip("(%S+)KK", "<>^{<>} ", { f(function(_, snip) return snip.captures[1] end), i(1, "sup") }, math),
+    ssnip("(%S+)K", "<>^{<>} ", { f(function(_, snip) return snip.captures[1] end), i(1, "sup") }, math),
 
-    ssnip("(%S+)JK", "<>_{<>}^{<>} ", { f(function(_, snip) return snip.captures[1] end), i(1, "sub"), i(2, "sup") },
+    ssnip("(%S+)L", "<>_{<>}^{<>} ", { f(function(_, snip) return snip.captures[1] end), i(1, "sub"), i(2, "sup") },
         math),
 
     -- inverse
@@ -73,11 +73,13 @@ return {
 
     ssnip("(%S+)vv", "\\vec{<>} ", { f(function(_, snip) return snip.captures[1] end), }, math),
 
+    ssnip("(%S+)nr", "||<>||", { f(function(_, snip) return snip.captures[1] end), }, math),
+
     ssnip("(%S+)ht", "\\hat{<>} ", { f(function(_, snip) return snip.captures[1] end), }, math),
 
     ssnip("(%S+)br", "\\bar{<>} ", { f(function(_, snip) return snip.captures[1] end), }, math),
 
-    ssnip("(%S+)sr", "\\stackrel{<>}{<>} ", { i(1), f(function(_, snip) return snip.captures[1] end), }, math),
+    ssnip("(%S+)%s?sr", "\\stackrel{<>}{<>} ", { i(1), f(function(_, snip) return snip.captures[1] end), }, math),
 
     ssnip("(%a+)(%d)%s", "<>_<> ", {
         f(function(_, snip) return snip.captures[1] end),

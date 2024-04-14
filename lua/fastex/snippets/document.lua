@@ -1,16 +1,13 @@
+local helper = require("fastex.luasnip_helpers")
 local ls = require("luasnip")
 local i = ls.insert_node
-local helper = require("fastex.luasnip_helpers")
-local first_word = helper.begin_snip
 local snip = helper.std_snip
 local math = helper.math
 local not_math = helper.not_math
 local ri = helper.ri
-local line_begin = require("luasnip.extras.expand_conditions").line_begin
-
 local d = ls.dynamic_node
 
-local get_visual = function(args, parent)
+local get_visual = function(_, parent)
     if (#parent.snippet.env.LS_SELECT_RAW > 0) then
         return ls.snippet_node(nil, i(1, parent.snippet.env.LS_SELECT_RAW))
     else -- If LS_SELECT_RAW is empty, return a blank insert node
@@ -20,7 +17,7 @@ end
 
 local envs = {
     {"cc", "cases", math},
-    {"ali", "*align", not_math},
+    {"ali", "align*", not_math},
     {"qq", "question", not_math},
     {"fla", "flashcard", not_math},
 }
@@ -48,25 +45,25 @@ local envstr = [[
 ]]
 
 local env_snippets = {}
-for key, val in pairs(envs) do
-    local envsnip = first_word( val[1], string.format(envstr, val[2], val[2]), {d(1, get_visual)}, val[3])
+for _, val in pairs(envs) do
+    local envsnip = snip( val[1], string.format(envstr, val[2], val[2]), {d(1, get_visual)}, val[3])
     table.insert(env_snippets, envsnip)
 end
 
-for key, val in pairs(amsthm) do
-    local envsnip = first_word( val[1], string.format(amsthmstr, val[2], val[2]), {i(1),d(2, get_visual)}, val[3])
+for _, val in pairs(amsthm) do
+    local envsnip = snip( val[1], string.format(amsthmstr, val[2], val[2]), {i(1),d(2, get_visual)}, val[3])
     table.insert(env_snippets, envsnip)
 end
 
 return {
-    first_word("ss", "\\section{<>}", { i(1) }, not_math),
-    first_word("sus", "\\subsection{<>}", { i(1) }, line_begin),
-    first_word("suus", "\\subsubsection{<>}", { i(1) }, line_begin),
+    snip("ss", "\\section{<>}", { i(1) }, not_math),
+    snip("sus", "\\subsection{<>}", { i(1) }, not_math),
+    snip("suus", "\\subsubsection{<>}", { i(1) }, not_math),
 
     snip("ll", " $<>$ ", { i(1, "math") }, not_math),
-    snip("tx", "\\text{ <> } ", { i(1) }, math),
+    snip("tx", "\\tx{ <> } ", { i(1) }, math),
 
-    first_word("dm", [[
+    snip("dm", [[
     \[
         <>
     .\]

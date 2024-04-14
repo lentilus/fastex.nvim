@@ -1,6 +1,5 @@
 local M = {}
 
-
 M.setup = function()
     local autosnippets = {}
     local sources = {
@@ -15,6 +14,7 @@ M.setup = function()
         "relations",
         "sets",
         "document",
+        "matrix",
     }
 
     for _, s in ipairs(sources) do

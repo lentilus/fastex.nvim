@@ -62,23 +62,31 @@ return {
         f(function(_, snip) return snip.captures[2] end),
     }, math),
 
-    ssnip("(%s+)kk(%w)", "<>^<>", {
+    ssnip("(%S+)kk(%w)", "<>^<>", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
     }, math),
 
-    ssnip("(%s+)jk(%w)(%w)", "<>_<>^<>", {
+    ssnip("(%S+)jk(%w)(%w)", "<>_<>^<>", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
         f(function(_, snip) return snip.captures[3] end),
     }, math),
 
-    ssnip("(%S+)J", "<>_{<>}", { f(function(_, snip) return snip.captures[1] end), i(1, "sub") }, math),
-    ssnip("(%S+)K", "<>^{<>}", { f(function(_, snip) return snip.captures[1] end), i(1, "sup") }, math),
-    ssnip("(%S+)L", "<>_{<>}^{<>}", { f(function(_, snip) return snip.captures[1] end), i(1, "sub"), i(2, "sup") }, math),
+    -- fix in post
+    ssnip("(.*)_(%w%w+)%s", "<>_{<>}", {
+        f(function(_, snip) return snip.captures[1] end),
+        f(function(_, snip) return snip.captures[2] end),
+    }, math),
 
+    ssnip("(.*)%^(%w%w+)%s", "<>^{<>}", {
+        f(function(_, snip) return snip.captures[1] end),
+        f(function(_, snip) return snip.captures[2] end),
+    }, math),
+    --
 
-    ssnip("([%a%)}]+)(%d)", "<>_<>", {
+    -- avoid confilict with jj, kk and jk
+    ssnip("([A-Za-hl-z%)}]+)(%d)", "<>_<>", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
     }, math),

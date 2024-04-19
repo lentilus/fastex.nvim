@@ -1,16 +1,15 @@
 local helper = require("fastex.luasnip_helpers")
-local ls = require("luasnip")
-local i = ls.insert_node
 local snip = helper.std_snip
 local math = helper.math
+
+local ls = require("luasnip")
+local i = ls.insert_node
 local d = ls.dynamic_node
--- some shorthands...
-local s = ls.snippet
 local sn = ls.snippet_node
 local t = ls.text_node
 local f = ls.function_node
 local r = ls.restore_node
-local fmt = require("luasnip.extras.fmt").fmt
+
 
 -- generating function
 local mat = function(_, sp)
@@ -79,8 +78,6 @@ local lmat = function(_, sp)
         end
         table.insert(nodes, t({ " \\\\", "" }))
     end
-    -- fix last node.
-    print("fixing last node")
     nodes[#nodes] = t(" \\\\")
     return sn(nil, nodes)
 end
@@ -98,5 +95,19 @@ return {
         \end{pmatrix}]], {
         d(1,lmat),
         }, math),
+
+    snip("(%b())uu", "\\begin{pmatrix}<>\\end{pmatrix} ", {
+        f(
+            function(_, sp)
+                local captured = sp.captures[1]
+                -- remove first (
+                local str = captured:sub(2)
+                -- remove last )
+                str = str:sub(1, -2)
+                str = string.gsub(str, ",%s*", "\\\\ ")
+                return str
+            end
+        ),
+    }, math),
     }
 

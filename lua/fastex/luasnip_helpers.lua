@@ -6,17 +6,9 @@ local ins = ls.insert_node
 local sn = ls.snippet_node
 local f = ls.function_node
 local fmta = require("luasnip.extras.fmt").fmta
-M.insert = ls.insert_node
 
-M.line_begin = require("luasnip.extras.expand_conditions").line_begin
-
-M.math = function()
-    return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
-end
-
-function M.not_math()
-    return not M.math()
-end
+M.math = function() return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1 end
+function M.not_math() return not M.math() end
 
 function M.get_visual(args, parent)
     if (#parent.snippet.env.LS_SELECT_RAW > 0) then

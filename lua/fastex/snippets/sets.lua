@@ -10,7 +10,7 @@ local line_begin = require("luasnip.extras.expand_conditions").line_begin
 
 return {
     snip("set", "\\set{<>}", {i(1)}, math),
-    snip("st", "\\set{<>}{<>}", {i(1, "x"), i(2, "condition")}, math),
+    snip("st", "\\set{<>}{<>}", {i(1, "x"), i(2, "filter")}, math),
     snip("es", "\\emptyset", {}, math),
     snip("ses", "\\set{\\emptyset\\}", {}, math),
     snip("sp", "\\supset", {}, math),

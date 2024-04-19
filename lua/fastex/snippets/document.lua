@@ -20,13 +20,15 @@ local envs = {
     {"ali", "align*", not_math},
     {"qq", "question", not_math},
     {"fla", "flashcard", not_math},
+    {"enum", "enumerate", not_math},
+    {"item", "itemize", not_math},
 }
 
 local amsthm = {
     {"tem", "theorem", not_math},
     {"pro", "proof", not_math},
     {"axi", "axiom", not_math},
-    {"cor", "corrolary", not_math},
+    {"cor", "corollary", not_math},
     {"lem", "lemma", not_math},
     {"def", "definition", not_math},
     {"exa", "example", not_math},
@@ -62,6 +64,10 @@ return {
 
     snip("ll", " $<>$ ", { i(1, "math") }, not_math),
     snip("tx", "\\tx{ <> } ", { i(1) }, math),
+    snip("it", [[
+        \item <>
+        <>
+    ]], { i(1), i(2) }, not_math),
 
     snip("dm", [[
     \[

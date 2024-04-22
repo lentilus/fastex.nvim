@@ -26,6 +26,7 @@ local amsthm = {
     {"lem", "lemma", not_math},
     {"def", "definition", not_math},
     {"exa", "example", not_math},
+    {"rem", "remark", not_math},
 }
 
 local amsthmstr = "\\begin{%s}\n<>\n\\end{%s}"
@@ -48,6 +49,8 @@ return {
     start("suus", "\\subsubsection{<>}", { i(1) }, not_math),
     start("dm", "\\[\n<>\n.\\]", {i(1)}, not_math),
     start("beg", "\\begin{<>}\n<>\n\\end{<>}", { i(1), i(2), ri(1) }, nil),
+    start("end", "\\end{<>}\n", {i(1)}, nil),
+    start("pac", "\\usepackage{<>}\n", { i(1)}, not_math),
     snip("ll", " $<>$ ", { i(1, "math") }, not_math),
     snip("tx", "\\tx{ <> } ", { i(1) }, math),
 

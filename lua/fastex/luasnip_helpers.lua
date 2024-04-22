@@ -61,10 +61,12 @@ local function begin_matcher(line_to_cursor, trigger)
     end
 end
 
-function M.std_snip(trig, exp, insert, cond)
+function M.std_snip(trig, exp, insert, cond, priority)
+    priority = priority or 1000
     return s({ trig = trig, regTrig = true,
     trigEngine = function() return std_matcher end,
     wordtrig = false,
+    priority = priority,
     snippetType = "autosnippet" },
         fmta(exp, {
             unpack(insert)

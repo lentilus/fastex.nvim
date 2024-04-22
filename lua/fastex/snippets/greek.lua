@@ -4,22 +4,9 @@ local i = ls.insert_node
 local snip = helper.std_snip
 local math = helper.math
 local not_math = helper.not_math
-local ri = helper.ri
-local d = ls.dynamic_node
+local f = ls.function_node
 
 local ls = require("luasnip")
-local s = ls.snippet
-local i = ls.insert_node
-local f = ls.function_node
-local fmta = require("luasnip.extras.fmt").fmta
-
-local function math()
-    return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1
-end
-
-local function not_math()
-    return not math()
-end
 
 local letters = {
     {"a", "alpha"}, {"A", "Alpha"},
@@ -47,8 +34,10 @@ local letters = {
 local greek_snippets = {}
 
 for _, val in pairs(letters) do
-    local math_snip = snip( "'"..val[1], "\\"..val[2].." ", {}, math)
-    local text_snip = snip( "'"..val[1], "$\\"..val[2].."$ ", {}, not_math)
+    local math_snip = snip("(.*)'"..val[1], "<>\\"..val[2], {
+        f(function(_, sp) return sp.captures[1] end),
+    }, math)
+    local text_snip = snip("'"..val[1], "$\\"..val[2].."$ ", {}, not_math)
     table.insert(greek_snippets, math_snip)
     table.insert(greek_snippets, text_snip)
 end

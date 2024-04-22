@@ -3,18 +3,14 @@ local M = {}
 M.setup = function()
     local autosnippets = {}
     local sources = {
+        "math",
         "greek",
-        "junctions",
         "language",
-        "mappings",
         "mathbb",
-        "operations",
-        "quantors",
         "regex",
-        "relations",
-        "sets",
         "document",
         "matrix",
+        "subscript"
     }
 
     for _, s in ipairs(sources) do

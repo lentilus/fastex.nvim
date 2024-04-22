@@ -27,29 +27,27 @@ local post_brackets = {
 }
 local bracket_trig = "([%${}%(%)]?)(%S+)%s?"
 for _, val in pairs(post_brackets) do
-    local snippet1 = ssnip( bracket_trig..val[1], "<>"..val[2].."<>"..val[3], {
+    table.insert(snippets, ssnip( bracket_trig..val[1], "<>"..val[2].."<>"..val[3], {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end)
-    }, math, 100)
-    local snippet2 = ssnip( "(%b())%s?"..val[1], val[2].."<>"..val[3], {
-        f(function(_, snip) return snip.captures[1] end),
-    }, math, 10000)
-    local snippet3 = ssnip( "(%b[])%s?"..val[1], val[2].."<>"..val[3], {
-        f(function(_, snip) return snip.captures[1] end),
-    }, math, 10000)
-    local snippet4 = ssnip( "(%b{})%s?"..val[1], val[2].."<>"..val[3], {
-        f(function(_, snip) return snip.captures[1] end),
-    }, math, 10000)
+    }, math, 100))
 
-    table.insert(snippets, snippet1)
-    table.insert(snippets, snippet2)
-    table.insert(snippets, snippet3)
-    table.insert(snippets, snippet4)
+    table.insert(snippets, ssnip( "(%b())%s?"..val[1], val[2].."<>"..val[3], {
+        f(function(_, snip) return snip.captures[1] end),
+    }, math, 10000))
+
+    table.insert(snippets, ssnip( "(%b[])%s?"..val[1], val[2].."<>"..val[3], {
+        f(function(_, snip) return snip.captures[1] end),
+    }, math, 10000))
+
+    table.insert(snippets, ssnip( "(%b{})%s?"..val[1], val[2].."<>"..val[3], {
+        f(function(_, snip) return snip.captures[1] end),
+    }, math, 10000))
 end
 
 local post_tuples = {
-    {"t","(", ")"},
-    {"d","d(", ")"},
+    {"t","(", ")"}, -- generic tuple
+    {"d","d(", ")"}, -- metric
     {"s","\\langle ", "\\rangle"}, -- dotproduct
 }
 
@@ -66,20 +64,6 @@ end
 return {
 
     ssnip("bb", "(<>)", {i(1)}, math),
-
-    -- tuple
-    ssnip("([{}%(%)%$]?)(%S+)%s?[;,]%s?(%S+) t", "<>(<>,<>)", {
-    f(function(_, snip) return snip.captures[1] end),
-    f(function(_, snip) return snip.captures[2] end),
-    f(function(_, snip) return snip.captures[3] end),
-    }, math),
-
-    -- metrik
-    ssnip("([{}%(%)%$]?)(%S+)%s?[;,]%s?(%S+) d", "<>d(<>,<>)", {
-    f(function(_, snip) return snip.captures[1] end),
-    f(function(_, snip) return snip.captures[2] end),
-    f(function(_, snip) return snip.captures[3] end),
-    }, math),
 
     -- single letters to variables
     ssnip("(%w)(%s)", "$<>$<>", {

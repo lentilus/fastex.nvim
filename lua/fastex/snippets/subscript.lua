@@ -50,23 +50,23 @@ return {
     }, not_math),
 
     -- postfix --
-    ssnip("(.*)%^([^{][%w\\%^%b{}]*)%s", "<>^{<>}", {
+    ssnip("(.*)%^([^{][%w\\%^%b{}]+)%s", "<>^{<>}", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
     }, math, 100),
 
-    ssnip("(.*)_([^{][%w\\_{}%b{}]*)%s", "<>_{<>}", {
+    ssnip("(.*)_([^{][%w\\_{}%b{}]+)%s", "<>_{<>}", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
     }, math, 100),
 
-    ssnip("(.*)%^([^{][%w\\%^%b{}]*)(%_.)", "<>^{<>}<>", {
+    ssnip("(.*)%^([^{][%w\\%^%b{}]+)(%_.)", "<>^{<>}<>", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
         f(function(_, snip) return snip.captures[3] end),
     }, math, 100),
 
-    ssnip("(.*)_([^{][%w\\_{}%b{}]*)(%^.)", "<>_{<>}<>", {
+    ssnip("(.*)_([^{][%w\\_{}%b{}]+)(%^.)", "<>_{<>}<>", {
         f(function(_, snip) return snip.captures[1] end),
         f(function(_, snip) return snip.captures[2] end),
         f(function(_, snip) return snip.captures[3] end),

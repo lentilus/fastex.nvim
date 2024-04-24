@@ -44,6 +44,8 @@ return {
     snip("seb", "\\subseteq ", {}, math),
     snip("ca", "\\cap ", {}, math),
     snip("cu", "\\cup ", {}, math),
+    snip("bca", "\\bigcap", {}, math),
+    snip("bcu", "\\bigcup", {}, math),
     snip("sem", "\\setminus ", {}, math),
 
     snip("mt", "\\mapsto ", {}, math),

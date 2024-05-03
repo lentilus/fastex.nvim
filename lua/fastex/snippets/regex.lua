@@ -22,6 +22,7 @@ local post_brackets = {
     {"dt","\\dot{", "}"},
     {"vv","\\vec{", "}"},
     {"nr","\\norm{", "}"},
+    {"rt","\\sqrt{", "}"},
     {"ag","\\langle ", "\\rangle"},
     {"lr","\\left(", "\\right)"},
 }
@@ -34,14 +35,20 @@ for _, val in pairs(post_brackets) do
 
     table.insert(snippets, ssnip( "(%b())%s?"..val[1], val[2].."<>"..val[3], {
         f(function(_, snip) return snip.captures[1] end),
-    }, math, 10000))
+    }, math, 1000))
 
     table.insert(snippets, ssnip( "(%b[])%s?"..val[1], val[2].."<>"..val[3], {
         f(function(_, snip) return snip.captures[1] end),
-    }, math, 10000))
+    }, math, 1000))
 
     table.insert(snippets, ssnip( "(%b{})%s?"..val[1], val[2].."<>"..val[3], {
         f(function(_, snip) return snip.captures[1] end),
+    }, math, 1000))
+end
+
+for _, val in pairs(post_brackets) do
+    table.insert(snippets, ssnip( "%s;"..val[1], val[2].."<>"..val[3], {
+        d(1, get_visual)
     }, math, 10000))
 end
 
@@ -119,26 +126,32 @@ return {
         f(function(_, sp) return sp.captures[2] end),
     }, math),
 
-    ssnip("(.*)%s+is%s+(%S+)%s", "<>\\tx{-<>}", {
+    -- ssnip("(.*)%s+is%s+(%S+)%s", "<>\\tx{-<>}", {
+    --     f(function(_, sp) return sp.captures[1] end),
+    --     f(function(_, sp) return sp.captures[2] end),
+    -- }, math),
+    --
+    -- ssnip("(.*)%s+si", "<>\\tx{-<>}", {
+    --     f(function(_, sp) return sp.captures[1] end),
+    --     i(1),
+    -- }, math),
+    --
+    -- ssnip("(.*%$)%s?is%s+(%S+)%s", "<>-<> ", {
+    --     f(function(_, sp) return sp.captures[1] end),
+    --     f(function(_, sp) return sp.captures[2] end),
+    -- }, not_math),
+
+    -- ssnip("([Ss]ei)%s+(%$.-%$)%s+(%S+)%s", "<> <>-<> ", {
+    --     f(function(_, sp) return sp.captures[1] end),
+    --     f(function(_, sp) return sp.captures[2] end),
+    --     f(function(_, sp) return sp.captures[3] end),
+    -- }, not_math),
+
+    --1 through n
+    ssnip("%s(%S+)%s?tn", "<>_1,\\dots,<>_n", {
         f(function(_, sp) return sp.captures[1] end),
-        f(function(_, sp) return sp.captures[2] end),
+        f(function(_, sp) return sp.captures[1] end),
     }, math),
-
-    ssnip("(.*)%s+si", "<>\\tx{-<>}", {
-        f(function(_, sp) return sp.captures[1] end),
-        i(1),
-    }, math),
-
-    ssnip("(.*%$)%s?is%s+(%S+)%s", "<>-<> ", {
-        f(function(_, sp) return sp.captures[1] end),
-        f(function(_, sp) return sp.captures[2] end),
-    }, not_math),
-
-    ssnip("([Ss]ei)%s+(%$.-%$)%s+(%S+)%s", "<> <>-<> ", {
-        f(function(_, sp) return sp.captures[1] end),
-        f(function(_, sp) return sp.captures[2] end),
-        f(function(_, sp) return sp.captures[3] end),
-    }, not_math),
 
     table.unpack(snippets),
 }

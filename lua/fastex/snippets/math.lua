@@ -10,11 +10,11 @@ return {
     snip("in", "\\in ", {}, math),
     snip("ni", "\\not\\in ", {}, math),
 
-    -- 
+    -- shorthands
     snip("fen", "\\forall\\varepsilon>>0", {}, math),
     snip("fdn", "\\forall\\delta>>0", {}, math),
-    snip("ed", "\\exists\\delta>>0", {}, math),
-    snip("en", "\\exists\\epsilon>>0", {}, math),
+    snip("edd", "\\exists\\delta>>0", {}, math),
+    snip("enn", "\\exists\\epsilon>>0", {}, math),
 
     -- logic
     snip("an", "\\land ", {}, math),
@@ -59,6 +59,7 @@ return {
     snip("ast", "\\ast ", {}, math),
     snip("oo", "\\circ ", {}, math),
     snip("sim", "\\sim ", {}, math),
+    snip("iso", "\\cong ", {}, math),
     snip("ddx", "\\frac{d<>}{d<>}", { i(1, "f"), i(2, "x") }, math),
 
     snip("it", "\\int_{<>}^{<>}", { i(1, "a"), i(2, "b") }, math),

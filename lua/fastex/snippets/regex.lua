@@ -46,9 +46,9 @@ for _, val in pairs(post_brackets) do
 end
 
 local post_tuples = {
-    {"t","(", ")"}, -- generic tuple
-    {"d","d(", ")"}, -- metric
-    {"s","\\langle ", "\\rangle"}, -- dotproduct
+    {"tt","(", ")"}, -- generic tuple
+    {"dd","d(", ")"}, -- metric
+    {"ss","\\langle ", "\\rangle"}, -- dotproduct
 }
 
 local tupel_trig="([{}%(%)%$]?)(%S+)%s?[;,]%s?(%S+)%s"
@@ -106,6 +106,13 @@ return {
         f(function(_, sp) return sp.captures[1] end),
         f(function(_, sp) return sp.captures[2] end),
     }, math),
+
+    -- Epsilon Ball
+    ssnip("(.*%s)be%s?(%S+)%s+", "<>B_{\\varepsilon}(<>)", {
+        f(function(_, sp) return sp.captures[1] end),
+        f(function(_, sp) return sp.captures[2] end),
+    }, math),
+
 
     ssnip("(.*)%s?dif%s?(%S+)%s+", "<>^{(<>)}", {
         f(function(_, sp) return sp.captures[1] end),

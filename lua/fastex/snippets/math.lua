@@ -10,6 +10,12 @@ return {
     snip("in", "\\in ", {}, math),
     snip("ni", "\\not\\in ", {}, math),
 
+    -- 
+    snip("fen", "\\forall\\varepsilon>>0", {}, math),
+    snip("fdn", "\\forall\\delta>>0", {}, math),
+    snip("ed", "\\exists\\delta>>0", {}, math),
+    snip("en", "\\exists\\epsilon>>0", {}, math),
+
     -- logic
     snip("an", "\\land ", {}, math),
     snip("or", "\\lor ", {}, math),

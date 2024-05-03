@@ -34,12 +34,12 @@ local envstr = "\\begin{%s}\n<>\n\\end{%s}"
 
 local env_snippets = {}
 for _, val in pairs(envs) do
-    local envsnip = snip( val[1], string.format(envstr, val[2], val[2]), {d(1, get_visual)}, val[3])
+    local envsnip = start( val[1], string.format(envstr, val[2], val[2]), {d(1, get_visual)}, val[3])
     table.insert(env_snippets, envsnip)
 end
 
 for _, val in pairs(amsthm) do
-    local envsnip = snip( val[1], string.format(amsthmstr, val[2], val[2]), {d(1, get_visual)}, val[3])
+    local envsnip = start( val[1], string.format(amsthmstr, val[2], val[2]), {d(1, get_visual)}, val[3])
     table.insert(env_snippets, envsnip)
 end
 

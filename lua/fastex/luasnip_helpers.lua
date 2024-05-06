@@ -18,6 +18,10 @@ function M.get_visual(args, parent)
     end
 end
 
+function M.cap(i)
+    return f(function(_, snip) return snip.captures[i] end)
+end
+
 function M.ri(insert_node_id)
     return f(function(args) return args[1][1] end, insert_node_id)
 end

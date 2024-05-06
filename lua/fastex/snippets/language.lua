@@ -13,6 +13,7 @@ return {
     snip("aber", "\\tx{falls} ", {}, math),
 
     snip("kp ", "K\"orper ", {}, not_math),
+    snip("bl ", "beliebig ", {}, not_math),
     snip("vr ", "Vektorraum ", {}, not_math),
     snip("mg ", "Menge ", {}, not_math),
     snip("gp ", "Gruppe ", {}, not_math),

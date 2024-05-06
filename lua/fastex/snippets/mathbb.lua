@@ -4,16 +4,18 @@ local i = ls.insert_node
 local helper = require("fastex.luasnip_helpers")
 local snip = helper.std_snip
 local math = helper.math
+local cap = helper.cap
 
 return {
-    snip("([ABDEFGHIJKLMNOPSTUVWXY])%1", "\\mathbb{<>}", {
-            f(function(_, sp) return sp.captures[1] end)
-        }, math
-    ),
+    snip("([A-Z])%1", "\\mathbb{<>}", { cap(1) }, math, 100),
+
+    -- higher priority by default:
     snip("CC", "\\C ", {}, math),
     snip("KK", "\\K ", {}, math),
-    snip("La", "\\La ", {}, math),
     snip("QQ", "\\Q ", {}, math),
     snip("RR", "\\R ", {}, math),
     snip("ZZ", "\\Z ", {}, math),
+    snip("La", "\\La ", {}, math),
+
+    snip("(\\%a)%s?(%d)%s", "<>^<> ", {cap(1), cap(2)}, math),
 }

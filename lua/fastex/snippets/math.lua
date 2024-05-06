@@ -11,8 +11,7 @@ return {
     snip("ni", "\\not\\in ", {}, math),
 
     -- shorthands
-    snip("fen", "\\forall\\varepsilon>>0", {}, math),
-    snip("fdn", "\\forall\\delta>>0", {}, math),
+    snip("fen", "\\forall\\varepsilon>>0", {}, math), snip("fdn", "\\forall\\delta>>0", {}, math),
     snip("edd", "\\exists\\delta>>0", {}, math),
     snip("enn", "\\exists\\epsilon>>0", {}, math),
 
@@ -48,10 +47,10 @@ return {
     snip("sb", "\\subset ", {}, math),
     snip("sep", "\\supseteq ", {}, math),
     snip("seb", "\\subseteq ", {}, math),
-    snip("ca", "\\cap ", {}, math),
-    snip("cu", "\\cup ", {}, math),
-    snip("bca", "\\bigcap", {}, math),
-    snip("bcu", "\\bigcup", {}, math),
+    snip("nn", "\\cap ", {}, math),
+    snip("uu", "\\cup ", {}, math),
+    snip("NN", "\\bigcap", {}, math, 1000),
+    snip("UU", "\\bigcup", {}, math, 1000),
     snip("sem", "\\setminus ", {}, math),
 
     snip("mt", "\\mapsto ", {}, math),
@@ -65,6 +64,7 @@ return {
     snip("it", "\\int_{<>}^{<>}", { i(1, "a"), i(2, "b") }, math),
     snip("sm", "\\sum_{<>}^{<>}", { i(1, "i=0"), i(2, "\\infty") }, math),
     snip("lim", "\\lim_{<> \\to <>}", { i(1, "x"), i(2, "\\infty") }, math),
+    snip("ii", "\\infty", {}, math),
 
     snip("ker", "\\ker ", {}, math),
     snip("dim", "\\dim ", {}, math),
@@ -78,5 +78,5 @@ return {
     snip("hp", "\\HP(<>)", { i(2) }, math),
     snip("gl", "\\GL(<>,<>)", { i(1, "n \\times n"), i(1, "\\K") }, math),
     snip("eig", "\\Eig(<>,<>)", { i(1, "A"), i(2, "\\lambda") }, math),
-    snip("mat", "\\Mat(<> \\times <>; <>)", { i(1, "n"), i(2, "n"), i(3, "\\K") }, math),
+    snip("mt", "\\Mat(<> \\times <>; <>)", { i(1, "n"), i(2, "n"), i(3, "\\K") }, math),
 }

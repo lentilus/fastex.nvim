@@ -64,6 +64,59 @@ local groups = {
     "%a+"
 }
 
+
+function string:split(pat)
+  pat = pat or '%s+'
+  local st, g = 1, self:gmatch("()("..pat..")")
+  local function getter(segs, seps, sep, cap1, ...)
+    st = sep and seps + #sep
+    return self:sub(segs, (seps or 0) - 1), cap1 or sep, ...
+  end
+  return function() if st then return getter(st, g()) end end
+end
+
+local function get_groups(trigger)
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
+end
+
+local function mgroup_matcher(line_to_cursor, trigger)
+    local tex_command = { line_to_cursor:find("\\%a*$") }
+    if #tex_command > 0 then
+        return nil
+    end
+
+    -- if this does not match, no need to check further
+    local base = { line_to_cursor:find(trigger .. "$") }
+    if #base == 0 then
+        return nil
+    end
+    local matches = {}
+    for _,i in pairs(groups) do
+        matches = { line_to_cursor:find("("..i..")%s?".. trigger .. "$") }
+        if #matches > 0 then
+            break
+        end
+    end
+    if #matches == 0 then
+        return nil
+    end
+    local captures = {}
+    local from = matches[1]
+    local match = line_to_cursor:sub(from, #line_to_cursor)
+
+    -- collect capture-groups.
+    for i = 3, #matches do
+        captures[i - 2] = matches[i]
+    end
+    return match, captures
+end
+
+
+
 local function group_matcher(line_to_cursor, trigger)
     local tex_command = { line_to_cursor:find("\\%a*$") }
     if #tex_command > 0 then
@@ -116,6 +169,101 @@ local function group_matcher(line_to_cursor, trigger)
 end
 
 
+local function subtrigs(trigger)
+    local ind = {}
+    for i in trigger:gmatch "()#" do
+       table.insert(ind, i)
+    end
+
+    local patterns = {}
+    local last_ind = 1
+
+    for i=1,#ind do
+        local pat = string.sub(trigger, last_ind, ind[i]-1) or nil
+        if #pat > 0 then
+            table.insert(patterns, pat)
+        end
+        table.insert(patterns, "#")
+        last_ind=ind[i]+1
+    end
+
+    local pat = string.sub(trigger, last_ind, #trigger) or nil
+    if #pat > 0 then
+        table.insert(patterns, pat)
+    end
+    return patterns
+end
+
+local function match_group(line)
+    local matches = {}
+    for _,gp in pairs(groups) do
+        matches = { line:find("("..gp..")%s?$") }
+        if #matches > 0 then
+            break
+        end
+    end
+    if #matches == 0 then
+        print(line)
+        print("returning nil")
+        return nil
+    end
+    local captures = {}
+    local from = matches[1]
+    local match = line:sub(from, #line)
+    local remainder = line:sub(1,matches[1]-1)
+
+    -- collect capture-groups.
+    for i = 3, #matches do
+        captures[i - 2] = matches[i]
+    end
+    return match, captures, remainder
+end
+
+local function match_sub(line, trig)
+    if trig == "#" then return match_group(line) end
+    print("trig is")
+    print(trig)
+    print("line is")
+    print(line)
+    local matches = { line:find(trig .. "$") }
+    if #matches == 0 then
+        return nil
+    end
+    local match = line:sub(matches[1], #line)
+    local remainder = line:sub(1,matches[1]-1)
+    local captures = {}
+    for i = 3, #matches do
+        captures[i - 1] = matches[i]
+    end
+    return match, captures, remainder
+end
+
+local function mgroup_matcher(line, trigger)
+    local tex_command = { line:find("\\%a*$") }
+    if #tex_command > 0 then
+        return nil
+    end
+
+    local final_match = ""
+    local final_captures = {}
+    local patterns = subtrigs(trigger)
+    for i=1,#patterns do
+        local match, captures, remainder = match_sub(line, patterns[#patterns-i+1])
+        if match == nil then return nil end
+
+        -- adjust indicies of captures
+        for j=1,#captures do
+            table.insert(final_captures, captures[j])
+        end
+
+        -- build final_match
+        final_match = match .. final_match
+        line = remainder
+    end
+    return final_match, final_captures
+end
+
+
 local function begin_matcher(line_to_cursor, trigger)
     local find_res = { line_to_cursor:find("^%s*" .. trigger) }
 
@@ -153,6 +301,7 @@ end
 
 M.std_snip = snip_factory(std_matcher)
 M.begin_snip = snip_factory(begin_matcher)
+M.mgroup_snip = snip_factory(mgroup_matcher)
 M.group_snip = function(trig, exp, insert, cond, priority)
         priority = priority or 1000
         return s({ trig = trig, regTrig = true,

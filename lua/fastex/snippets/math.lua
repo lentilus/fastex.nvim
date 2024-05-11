@@ -4,21 +4,35 @@ local helper = require("fastex.luasnip_helpers")
 local snip = helper.std_snip
 local math = helper.math
 
+local snippets = {}
+
+local auto_backslash = {
+    "neg",
+    "to",
+    "item",
+    "sim",
+    "ker",
+    "dim"
+}
+
+for _,val in pairs(auto_backslash) do
+    table.insert(snippets, snip(val, "\\"..val, {}, math))
+end
+
 return {
     snip("fa", "\\forall ", {}, math),
     snip("ex", "\\exists ", {}, math),
     snip("in", "\\in ", {}, math),
     snip("ni", "\\not\\in ", {}, math),
 
-    -- shorthands
+    -- logical chunks
     snip("fen", "\\forall\\varepsilon>>0", {}, math), snip("fdn", "\\forall\\delta>>0", {}, math),
     snip("edd", "\\exists\\delta>>0", {}, math),
-    snip("enn", "\\exists\\epsilon>>0", {}, math),
+    snip("enn", "\\exists\\varepsilon>>0", {}, math),
 
-    -- logic
+    -- boolean logic
     snip("an", "\\land ", {}, math),
     snip("or", "\\lor ", {}, math),
-    snip("neg", "\\neg ", {}, math),
     snip("no", "\\not ", {}, math),
     snip("ip", "\\implies ", {}, math),
     snip("ib", "\\impliedby ", {}, math),
@@ -66,10 +80,6 @@ return {
     snip("lim", "\\lim_{<> \\to <>}", { i(1, "x"), i(2, "\\infty") }, math),
     snip("ii", "\\infty", {}, math),
 
-    snip("ker", "\\ker ", {}, math),
-    snip("dim", "\\dim ", {}, math),
-    snip("sim", "\\sim ", {}, math),
-    snip("det", "\\det ", {}, math),
     snip("sgn", "\\sgn(<>)", { i(2) }, math),
     snip("ord", "\\ord(<>)", { i(2) }, math),
     snip("end", "\\End(<>)", { i(1, "V") }, math),
@@ -79,4 +89,6 @@ return {
     snip("gl", "\\GL(<>,<>)", { i(1, "n \\times n"), i(1, "\\K") }, math),
     snip("eig", "\\Eig(<>,<>)", { i(1, "A"), i(2, "\\lambda") }, math),
     snip("mt", "\\Mat(<> \\times <>; <>)", { i(1, "n"), i(2, "n"), i(3, "\\K") }, math),
+
+    table.unpack(snippets)
 }

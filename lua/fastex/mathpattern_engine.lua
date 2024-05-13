@@ -110,12 +110,13 @@ local function match_delim(line)
         if r > l then
             counter = counter + 1
             remainder = remainder:sub(1,r)
-            match = line:sub(r,#line)
+            match = line:sub(r+1,#line)
         else
             counter = counter - 1
             remainder = remainder:sub(1,l)
-            match = line:sub(l,#line)
+            match = line:sub(l+1,#line)
         end
+        print("remainder " ..remainder)
 
         if r == -1 and l == -1 then
             return nil

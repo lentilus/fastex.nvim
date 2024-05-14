@@ -1,6 +1,6 @@
 local M = {}
 
-local simple_groups = {
+local base_simple_groups = {
     "\\%a+%s?%b{}%s?%b{}", -- things like \frac{}{} \stackrel{}{} etc
     "\\%a+%s?%b{}", -- simpler commands like \pi
     "%b<>",
@@ -8,17 +8,49 @@ local simple_groups = {
     "%b()",
     "%b[]",
     "\\%a+",
-    "%a+",
     "[%a%d]+",
+    "%a+_%a",
+    "%a+%^%a",
+    "%a+",
 }
 
-local delimiters = {
+local base_delimiters = {
     {"\\left%S","\\right%S"},
     {"\\langle","\\rangle"},
     {"\\begin%b{}","\\end%b{}"},
     {"\\{.","\\}"},
     {"\\|.","\\|"},
 }
+
+local subscript =   { "%s?_%b{}", "%s?_%S", "" }
+local superscript =   { "%s?%^%b{}", "%s?%^%S", "" }
+
+local scripts = {}
+local delimiters = {}
+local simple_groups = {}
+
+for i=1,#subscript do
+    for j=1,#superscript do
+        local sa = subscript[i]..superscript[j]
+        local sb = superscript[j]..subscript[i]
+        table.insert(scripts, sa)
+        table.insert(scripts, sb)
+    end
+end
+
+for i=1,#base_simple_groups do
+    for j=1,#scripts do
+        local gp = base_simple_groups[i]..scripts[j]
+        table.insert(simple_groups, gp)
+    end
+end
+
+for i=1,#base_delimiters do
+    for j=1,#scripts do
+        local del = {base_delimiters[i][1], base_delimiters[i][2]..scripts[j]}
+        table.insert(delimiters, del)
+    end
+end
 
 local function subtrigs(trigger)
     local ind = {}
@@ -76,13 +108,11 @@ local function match_delim(line)
     for i=1,#delimiters do
         matches = { line:find("(" .. delimiters[i][2] ..")%s?$") }
         if #matches > 0 then
-            print("matched")
             del = i
             break
         end
     end
     if #matches == 0 then
-        print("first match failed")
         return nil
     end
     local remainder = line:sub(1,matches[1]-1)
@@ -116,13 +146,13 @@ local function match_delim(line)
             remainder = remainder:sub(1,l)
             match = line:sub(l+1,#line)
         end
-        print("remainder " ..remainder)
+        -- print("remainder " ..remainder)
 
         if r == -1 and l == -1 then
             return nil
         end
     end
-    print("counter ".. counter)
+    -- print("counter ".. counter)
     return match, { match }, remainder
 end
 
@@ -152,7 +182,7 @@ end
 M.matcher = function(line, trigger)
     local tex_command = { line:find("\\%a*$") }
     if #tex_command > 0 then
-        print("not expanding")
+        -- print("not expanding")
         return nil
     end
 
@@ -174,21 +204,19 @@ M.matcher = function(line, trigger)
         local pattern = patterns[#patterns-i+1]
         if pattern ~= "#selection" then
             local match, captures, remainder = match_sub(line, pattern)
-            if match == nil then return nil end
-
-            -- collect captures
+            if match == nil then
+                return nil
+            end
             for j=1,#captures do
                 table.insert(final_captures, captures[j])
             end
-
-            -- build final_match
             final_match = match .. final_match
             line = remainder
+            -- print("final "..remainder.." |"..final_match)
         end
     end
 
     table.insert(final_captures, selection)
-
     return final_match, final_captures
 end
 

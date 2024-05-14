@@ -1,5 +1,11 @@
 # FasTeX
 
+## In Short
+- Powerful and context aware Latex snippets for nvim implemented in LuaSnip
+- custom trigger matching engine tailored for LaTeX using a combination of lua pattern matching and custom logic
+
+## Installation
+
 My personal config
 ````lua
 return {

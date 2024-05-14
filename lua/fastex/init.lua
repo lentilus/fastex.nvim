@@ -10,7 +10,7 @@ M.setup = function()
         "regex",
         "document",
         "matrix",
-        -- "subscript"
+        "subscript"
     }
 
     for _, s in ipairs(sources) do

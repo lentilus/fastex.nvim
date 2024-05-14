@@ -6,8 +6,6 @@ local math = helper.math
 local not_math = helper.not_math
 local f = ls.function_node
 
-local ls = require("luasnip")
-
 local letters = {
     {"a", "alpha"}, {"A", "Alpha"},
     {"b", "beta"}, {"B", "Beta"},
@@ -34,10 +32,10 @@ local letters = {
 local greek_snippets = {}
 
 for _, val in pairs(letters) do
-    local math_snip = snip("(.*)'"..val[1], "<>\\"..val[2], {
+    local math_snip = snip("(.*);"..val[1], "<>\\"..val[2], {
         f(function(_, sp) return sp.captures[1] end),
     }, math)
-    local text_snip = snip("'"..val[1], "$\\"..val[2].."$ ", {}, not_math)
+    local text_snip = snip(";"..val[1], "$\\"..val[2].."$ ", {}, not_math)
     table.insert(greek_snippets, math_snip)
     table.insert(greek_snippets, text_snip)
 end

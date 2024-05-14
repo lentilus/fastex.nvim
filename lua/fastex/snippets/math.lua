@@ -11,7 +11,9 @@ local auto_backslash = {
     "item",
     "sim",
     "ker",
-    "dim"
+    "dim",
+    "mod",
+    "dots",
 }
 
 for _,val in pairs(auto_backslash) do

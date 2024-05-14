@@ -96,7 +96,7 @@ return {
         d(1,lmat),
         }, math),
 
-    snip("(%b())uu", "\\begin{pmatrix}<>\\end{pmatrix} ", {
+    snip("(%b())vec", "\\begin{pmatrix}<>\\end{pmatrix} ", {
         f(
             function(_, sp)
                 local captured = sp.captures[1]

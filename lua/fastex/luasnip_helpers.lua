@@ -6,7 +6,7 @@ local ins = ls.insert_node
 local sn = ls.snippet_node
 local f = ls.function_node
 local fmta = require("luasnip.extras.fmt").fmta
-local mathpattern_engine = require("fastex.mathpattern_engine").matcher
+local mg_engine = require("fastex").math_group_engine
 
 M.math = function() return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1 end
 M.not_math = function() return not M.math() end
@@ -68,11 +68,14 @@ local function snip_factory(matcher, type)
     type = type or "autosnippet"
     return function(trig, exp, insert, cond, priority)
         priority = priority or 1000
-        return s({ trig = trig, regTrig = true,
-        trigEngine = function() return matcher end,
-        wordtrig = false,
-        priority = priority,
-        snippetType =type },
+        return s({
+                trig = trig,
+                regTrig = true,
+                trigEngine = function() return matcher end,
+                wordtrig = false,
+                priority = priority,
+                snippetType = type
+            },
             fmta(exp, {
                 unpack(insert)
             }),
@@ -83,6 +86,6 @@ end
 
 M.std_snip = snip_factory(std_matcher)
 M.begin_snip = snip_factory(begin_matcher)
-M.mgroup_snip = snip_factory(mathpattern_engine)
+M.mgroup_snip = snip_factory(mg_engine)
 
 return M

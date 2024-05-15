@@ -3,6 +3,7 @@ local i = ls.insert_node
 local helper = require("fastex.luasnip_helpers")
 local snip = helper.std_snip
 local math = helper.math
+local cap = helper.cap
 
 local snippets = {}
 local auto_backslash = {
@@ -14,10 +15,17 @@ local auto_backslash = {
     "dim",
     "mod",
     "dots",
+    "vdots",
+    "ddots",
+    "quad",
+    "perp",
+    "oplus",
+    "det",
+    "Vol",
 }
 
 for _,val in pairs(auto_backslash) do
-    table.insert(snippets, snip(val, "\\"..val, {}, math))
+    table.insert(snippets, snip("(.*)".. val, "<>\\"..val, {cap(1)}, math))
 end
 
 return {
@@ -40,7 +48,8 @@ return {
     snip("if", "\\iff ", {}, math),
 
     -- relations
-    snip("ee", "=", {}, math),
+    snip("el", "=", {}, math),
+    snip("df", ":=", {}, math),
     snip("lt", "<<", {}, math),
     snip("gt", ">>", {}, math),
     snip("le", "\\leq ", {}, math),
@@ -88,7 +97,7 @@ return {
     snip("hp", "\\HP(<>)", { i(2) }, math),
     snip("gl", "\\GL(<>,<>)", { i(1, "n \\times n"), i(1, "\\K") }, math),
     snip("eig", "\\Eig(<>,<>)", { i(1, "A"), i(2, "\\lambda") }, math),
-    snip("mt", "\\Mat(<> \\times <>; <>)", { i(1, "n"), i(2, "n"), i(3, "\\K") }, math),
+    snip("mat", "\\Mat(<> \\times <>; <>)", { i(1, "n"), i(2, "n"), i(3, "\\K") }, math),
 
     table.unpack(snippets)
 }

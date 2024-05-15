@@ -21,6 +21,7 @@ local postdelim = {
     {"br","\\bar{", "}"},
     {"dt","\\dot{", "}"},
     {"vv","\\vec{", "}"},
+    {"td","\\tilde{", "}"},
     {"nr","\\norm{", "}"},
     {"rt","\\sqrt{", "}"},
     {"ag","\\langle ", "\\rangle"},
@@ -56,7 +57,7 @@ return {
     mgsnip("be%s?#%s", "B_{\\varepsilon}(<>)", { cap(1)}, math), -- epsiolon ball
     mgsnip("(.*)pt%s?#%s#%s", "<>\\frac{\\partial <>}{\\partial <>}", { cap(3),cap(2),cap(1) }, math), -- df/dx
     snip("(.*)%s?dif%s?(%S+)%s+", "<>^{(<>)}", { cap(1), cap(2) }, math), -- derivative
-    mgsnip("(.*)%s#%s?t(%w)", "<> <>_1,\\dots,<>_<>", { cap(3), cap(2), cap(2), cap(1) }, math), -- 1,...,n
+    mgsnip("(.*)#%s?til(%w)", "<> <>_1,\\dots,<>_<>", { cap(3), cap(2), cap(2), cap(1) }, math, 1000), -- 1,...,n
 
     table.unpack(snippets)
 }

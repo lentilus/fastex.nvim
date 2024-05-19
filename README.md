@@ -246,8 +246,7 @@ local simple_groups = {
     "%."
 }
 ```
-
-2. 1. we look at the first pattern: `\\%a+%s?%b{}%s?%b{}`. It matches so we move the head accordingly:
+We look at the first pattern: `\\%a+%s?%b{}%s?%b{}`. It matches so we move the head accordingly:
 `$ 3 * `|`\frac{\pi}{2} `
 
 3. Now we look at the next subtrigger: `s?%*%s?`. It matches so we move the head accordingly:
@@ -255,12 +254,21 @@ local simple_groups = {
 
 4. The last subtrigger is `#`: We hit a math group again. We try to match patterns from the table in decending priority:
 
-4. 1. `\\%a+%s?%b{}%s?%b{}` -> no match
+   1. `\\%a+%s?%b{}%s?%b{}` -> no match
    2. `\\%a+%s?%b{}` -> no match
    3. `\\%a+` -> no match
    4. `[%a%d]+` -> **match** -> we move the head accordingly: `$ `|`3 * \frac{\pi}{2} `
 
 All subtriggers matched -> The whole trigger matched -> we return `3 * \frac{\pi}{2} ` as the match.
 
+> We just matched two very different mathematical expressions using a very sane trigger.
+
+With such a trigger engine we can define powerful snippets that make manipulating latex so much nicer!
+
+But there is more: We now look at a delimiter based matching approach in order to capture expressions like
+`\left( ... \right)`, `\rangle ... \langle`, `\begin{...} ... \end{...}`
+
 ### advanced math groups
+
+There are cases where simple patterns and delimiter patterns arent versitile enough:
 

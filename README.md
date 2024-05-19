@@ -224,11 +224,31 @@ subtriggers = { "#", "%s?%*%s?", "#", "%s"}
 ```
 
 We now start matching the subtriggers against our line from right to left.
-We match `%s`, so we move the head `|` of our matcher like so.
-`$ 3 * \frac{\pi}{2}| `
 
-the we look at the next subtrigger: `#`. This indicates that we are trying to match a math group. Now things get interesting:
+1. We match `%s`, so we move the head of our matcher like so:
+`$ 3 * \frac{\pi}{2}`|` `
 
+2. the we look at the next subtrigger: `#`. This indicates that we are trying to match a simple math group. Now things get interesting:
+
+The following table contains patterns corresponding to simple math groups. The table is ordered by decending priority.
+
+```lua
+local simple_groups = {
+    "\\%a+%s?%b{}%s?%b{}", -- \frac{}{}
+    "\\%a+%s?%b{}",        -- \bar{}
+    "\\%a+",               -- \pi
+    "[%a%d]+",
+    "%a+",
+    "%b<>", "%b||", "%b()", "%b[]",
+    "%."
+}
+```
+
+2. 1. we look at the first pattern: `\\%a+%s?%b{}%s?%b{}`. It matches so we move the head acordingly:
+
+`$ 3 * `|`\frac{\pi}{2} `
+
+3. Now we look at the next subtrigger:
 
 ### advanced math groups
 

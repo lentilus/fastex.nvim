@@ -256,9 +256,9 @@ local simple_groups = {
 4. The last subtrigger is `#`: We hit a math group again. We try to match patterns from the table in decending priority:
 
 4. 1. `\\%a+%s?%b{}%s?%b{}` -> no match
-4. 2. `\\%a+%s?%b{}` -> no match
-4. 3. `\\%a+` -> no match
-4. 4. `[%a%d]+` -> **match** -> we move the head accordingly: `$ `|`3 * \frac{\pi}{2} `
+   2. `\\%a+%s?%b{}` -> no match
+   3. `\\%a+` -> no match
+   4. `[%a%d]+` -> **match** -> we move the head accordingly: `$ `|`3 * \frac{\pi}{2} `
 
 All subtriggers matched -> The whole trigger matched -> we return `3 * \frac{\pi}{2} ` as the match.
 

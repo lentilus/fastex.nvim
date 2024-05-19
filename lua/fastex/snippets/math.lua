@@ -22,10 +22,13 @@ local auto_backslash = {
     "oplus",
     "det",
     "Vol",
+    "sin",
+    "cos",
+    "tan"
 }
 
-for _,val in pairs(auto_backslash) do
-    table.insert(snippets, snip("(.*)".. val, "<>\\"..val, {cap(1)}, math))
+for _, val in pairs(auto_backslash) do
+    table.insert(snippets, snip("(.*)" .. val, "<>\\" .. val, { cap(1) }, math))
 end
 
 return {
@@ -63,8 +66,8 @@ return {
     snip("by", "\\cdot ", {}, math),
 
     -- sets
-    snip("set", "\\set{<>}", {i(1)}, math),
-    snip("st", "\\set{<>}{<>}", {i(1, "x"), i(2, "filter")}, math),
+    snip("set", "\\set{<>}", { i(1) }, math),
+    snip("st", "\\set{<>}{<>}", { i(1, "x"), i(2, "filter") }, math),
     snip("es", "\\emptyset ", {}, math),
     snip("ses", "\\set{\\emptyset\\}", {}, math),
     snip("sp", "\\supset ", {}, math),
@@ -93,6 +96,8 @@ return {
     snip("ord", "\\ord(<>)", { i(2) }, math),
     snip("end", "\\End(<>)", { i(1, "V") }, math),
     snip("hom", "\\Hom(<>)", { i(1, "V") }, math),
+    snip("imo", "\\Iso(<>)", { i(1, "V") }, math),
+    snip("ime", "\\Isome(<>)", { i(1, "V") }, math),
     snip("ig", "\\Image ", {}, math),
     snip("hp", "\\HP(<>)", { i(2) }, math),
     snip("gl", "\\GL(<>,<>)", { i(1, "n \\times n"), i(1, "\\K") }, math),

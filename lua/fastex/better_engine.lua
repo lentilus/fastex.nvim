@@ -1,3 +1,15 @@
+-- @ - advanced group (expands to multiple base group based triggers)
+-- # - base group
+
+-- Example: prefix # mid #suffix $
+-- 1. match suffix
+-- 2. match # (base group)
+-- 3. match mid
+-- 4. match # (base group)
+-- 5. match prefix
+--
+-- exit at any mismatch
+
 local M = {}
 
 local get_patterns = require("fastex.group_patterns").get_patterns
@@ -52,7 +64,6 @@ local function match_base_group(line)
         end
     end
     if #matches == 0 then
-        -- print("base group matched null")
         return nil
     end
     local from = matches[1]
@@ -107,7 +118,6 @@ local function match_delim(line)
             remainder = remainder:sub(1, l)
             match = line:sub(l + 1, #line)
         end
-        -- print("remainder " ..remainder)
 
         if r == -1 and l == -1 then
             return nil
@@ -126,37 +136,27 @@ local function match_sub(line, trig)
     -- match complex math
     if trig == "@" then
         for _, p in ipairs(patterns) do
-            -- print("splitting trigger")
             local sub_patterns = split_trigger(p)
             local sline = line
             for i = 0, #sub_patterns - 1 do
                 local sp = sub_patterns[#sub_patterns - i]
-                print("evaluating pattern ", p, ", subpattern ", #sub_patterns - i, "/", #sub_patterns, " ", sp)
                 local ma, _, re = match_sub(sline, sp)
                 if ma == nil then
-                    -- print("did not match")
-                    -- reset progress
                     match = ""
                     remainder = ""
                     break
                 end
-                -- print("We matched!")
-                -- for _, c in ipairs(ca) do
-                --     table.insert(captures, c)
-                -- end
                 match = ma .. match
                 sline = re
                 remainder = re
-                print("rem " .. remainder .. " |" .. match)
             end
+            -- print("pattern", p, " remainder ", sline, " |", match)
             if match ~= "" then
-                -- print("match is not nil!, returning: match: ", match, " captures: ", captures, " remainder: ", remainder)
                 return match, { match }, remainder
             end
         end
         return nil
     elseif trig == "#" then
-        -- print("matching simple goup")
         local ma, ca, re = match_delim(line)
         if ma ~= nil then
             return ma, ca, re
@@ -181,7 +181,6 @@ end
 local matcher = function(line, trigger)
     local tex_command = { line:find("\\%a*$") }
     if #tex_command > 0 then
-        -- print("not expanding")
         return nil
     end
 
@@ -201,7 +200,6 @@ local matcher = function(line, trigger)
 
     for i = 1, #split_patterns do
         local pattern = split_patterns[#split_patterns - i + 1]
-        -- print("pattern", pattern)
         if pattern ~= "#selection" then
             local match, captures, remainder = match_sub(line, pattern)
             if match == nil then
@@ -212,7 +210,6 @@ local matcher = function(line, trigger)
             end
             final_match = match .. final_match
             line = remainder
-            -- print("pattern: ", trigger, " ", pattern, " final " .. remainder .. " |" .. final_match)
         end
     end
 
@@ -220,25 +217,12 @@ local matcher = function(line, trigger)
     return final_match, final_captures
 end
 
--- -- local split = split_trigger("%d#%s?%^%b{}_%b{}")
--- -- for _, s in ipairs(split) do
--- --     print(s)
--- -- end
---
---
--- local a, b = matcher("foo(bar)_{i}^{k}", "foo@")
--- print("results", a)
---
--- --
--- -- local trigger = "%d#%s?%^%b{}_%b{}"
--- -- for i in trigger:gmatch "()[#@]" do
--- --     print(i)
--- --     -- table.insert(index, i)
--- -- end
-
 M.get_engine = function()
     return matcher
 end
+
+-- a, b, c = matcher("hallo ballo_i^{ab}", "hallo @")
+-- print("final match ", a)
 
 
 return M

@@ -1,36 +1,10 @@
 local M = {}
 
+local get_patterns = require("fastex.group_patterns").get_patterns
+
 M.get_engine = function(group_patterns, delimiter_patterns)
-    local subscript = { "%s?_%b{}", "%s?_%S", "" }
-    local superscript = { "%s?%^%b{}", "%s?%^%S", "" }
-
-    local scripts = {}
+    local simple_groups = get_patterns()
     local delimiters = {}
-    local simple_groups = {}
-
-    for i = 1, #subscript do
-        for j = 1, #superscript do
-            local sa = subscript[i] .. superscript[j]
-            local sb = superscript[j] .. subscript[i]
-            table.insert(scripts, sa)
-            table.insert(scripts, sb)
-        end
-    end
-
-    for i = 1, #group_patterns do
-        for j = 1, #scripts do
-            local gp = group_patterns[i] .. scripts[j]
-            table.insert(simple_groups, gp)
-        end
-    end
-
-    for i = 1, #delimiter_patterns do
-        for j = 1, #scripts do
-            local del = { delimiter_patterns[i][1], delimiter_patterns[i][2] .. scripts[j] }
-            table.insert(delimiters, del)
-        end
-    end
-
     local function subtrigs(trigger)
         local ind = {}
         for i in trigger:gmatch "()#" do
@@ -59,8 +33,8 @@ M.get_engine = function(group_patterns, delimiter_patterns)
 
     local function match_group(line)
         local matches = {}
-        for _, gp in pairs(simple_groups) do
-            matches = { line:find("(" .. gp .. ")%s?$") }
+        for i = 1, #simple_groups do
+            matches = { line:find("(" .. simple_groups[i] .. ")%s?$") }
             if #matches > 0 then
                 break
             end
@@ -191,7 +165,7 @@ M.get_engine = function(group_patterns, delimiter_patterns)
                 end
                 final_match = match .. final_match
                 line = remainder
-                -- print("final "..remainder.." |"..final_match)
+                -- print("final " .. remainder .. " |" .. final_match)
             end
         end
 

@@ -12,17 +12,14 @@ M.snippets = {
 }
 
 M.group_patterns = {
-    "\\%a+%s?%b{}%s?%b{}", -- things like \frac{}{} \stackrel{}{} etc
-    "\\%a+%s?%b{}",        -- simpler commands like \pi
-    "%b<>",
-    "%b||",
-    "%b()",
-    "%b[]",
-    "\\%a+",
+    "\\%a+%s?%b{}%s?%b{}", -- \frac{}{}
+    "\\%a+%s?%b{}",        -- \bar{}
+    "\\%a+",               -- \pi
     "[%a%d]+",
-    "%a+_%a",
-    "%a+%^%a",
+    -- "%a+_%a",
+    -- "%a+%^%a",
     "%a+",
+    "%b<>", "%b||", "%b()", "%b[]",
 }
 
 M.delimiter_patterns = {

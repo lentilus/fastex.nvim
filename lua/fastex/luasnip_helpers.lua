@@ -7,6 +7,7 @@ local sn = ls.snippet_node
 local f = ls.function_node
 local fmta = require("luasnip.extras.fmt").fmta
 local mg_engine = require("fastex").math_group_engine
+local b_engine = require("fastex.better_engine").get_engine()
 
 M.math = function() return vim.api.nvim_eval('vimtex#syntax#in_mathzone()') == 1 end
 M.not_math = function() return not M.math() end
@@ -86,6 +87,7 @@ end
 
 M.std_snip = snip_factory(std_matcher)
 M.begin_snip = snip_factory(begin_matcher)
-M.mgroup_snip = snip_factory(mg_engine)
+M.mgroup_snip = snip_factory(b_engine)
+M.bsnip = snip_factory(b_engine)
 
 return M

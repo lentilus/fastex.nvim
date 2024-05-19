@@ -190,11 +190,11 @@ And let "_" be the cursor position
 We want to be able to press "ag" in order to add angle brackets. So
 
 ```latex
-foo + bar - \pi ag_$
+$ foo + bar - \pi ag_$
 ```
 should turn into
 ```latex
-foo + bar - \langle \pi \rangle_$
+$ foo + bar - \langle \pi \rangle_$
 ```
 
 Now suppose we want to do this not just for "\pi", but also for "\frac{}{}", "(2 + i)", "|x-y|" and so on.

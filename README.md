@@ -32,14 +32,14 @@ vim.api.nvim_create_autocmd("User", {
 })
 ```
 
-FasTex adds this hook by default but you can disable it by setting the 'break_undo_sequence' to 'false' in the setup.
+FasTex adds this hook by default but you can disable it by setting the `break_undo_sequence` to `false` in the setup.
 
 ### traversing tabstops / insert nodes
 
 By default all snippets add a tabstop at the end of the expanded snippet.
 This is very usefull for traversing your code.
 When expanding snippets inside the inser nodes of other snippets it happens, that tabstops from two snippets overlap.
-This can be annoying because when you call the normal 'ls.jump(1)' your cursor position does not change.
+This can be annoying because when you call the normal `ls.jump(1)` your cursor position does not change.
 To mitigate this, I wrote the below function so you dont have to jump more than once to get to the next "interesting" insert.
 
 ```lua
@@ -120,9 +120,9 @@ local my_snip = snip_factory(my_engine)
 my_snip("(%w)(%s)", "$<>$<>", { cap(1), cap(2) }, not_math)
 ```
 
-This pseudo-code as we have not defined 'my_engine' and 'not_math' yet.
-In theory it could be used to put standalone characters in math mode, so we can type the much shorter "x " instead of "$x$ ".
-> In 'my_engine' we could make sure not to match "I" and "a" as they are used in "normal" language.
+This pseudo-code as we have not defined `my_engine` and `not_math` yet.
+In theory it could be used to put standalone characters in math mode, so we can type the much shorter `x ` instead of `\$x\$ `.
+> In `my_engine` we could make sure not to match `I` and `a` as they are used in "normal" language.
 
 ## Custom Trigger Engine
 
@@ -185,9 +185,9 @@ Lets say the current line looks like this
 ```latex
 $ foo + bar - \pi _$
 ```
-And let "_" be the cursor position
+And let `_` be the cursor position
 
-We want to be able to press "ag" in order to add angle brackets. So
+We want to be able to press `ag` in order to add angle brackets. So
 
 ```latex
 $ foo + bar - \pi ag_$
@@ -197,15 +197,15 @@ should turn into
 $ foo + bar - \langle \pi \rangle_$
 ```
 
-Now suppose we want to do this not just for "\pi", but also for "\frac{}{}", "(2 + i)", "|x-y|" and so on.
+Now suppose we want to do this not just for `\pi`, but also for `\frac{}{}`, `(2 + i)`, `|x-y|` and so on.
 
-FasTex provides a snippet_factory that covers exactly that. I introduce "#" as a special character to match expressions that I call math groups.
+FasTex provides a snippet factory that covers exactly that. I introduce `#` as a special character to match expressions that I call math groups.
 
 ```lua
 mgsnip("#ag", "\\langle <>\\rangle", { cap(1) }, math)
 ```
 
-the following sections go into detail about how the matcher behind the mgsnip works.
+the following sections go into detail about how the matcher behind the `mgsnip` (**m**ath **g**roup **snip**pet) works.
 
 ### advanced math groups
 

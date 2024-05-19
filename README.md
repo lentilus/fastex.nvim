@@ -211,8 +211,11 @@ the following sections go into detail about how the matcher behind the `mgsnip` 
 I devide this section into two parts. I will first talk about groups that are matched via a single `lua pattern` and then about delimiter based matching. To make following along easier, I recommend you get familiar with the basics of lua pattern matching.
 
 I will only sketch the algorithm but please feel free to look at the actual implemtation for the details.
-To illustrate the working of the simple group matcher, lets look at the trigger `#%s?%*%s?#%s`.
-Suppose the state of our editor is the following
+To illustrate the working of the simple group matcher, lets look at the following trigger:
+```lua
+trigger = "#%s?%*%s?#%s"
+```
+Suppose the line we are editing is:
 ```latex
 $ 3 * \frac{\pi}{2} _
 ```
@@ -225,7 +228,7 @@ subtriggers = { "#", "%s?%*%s?", "#", "%s"}
 
 We now start matching the subtriggers against our line from right to left.
 
-1. We match `%s`, so we move the head of our matcher like so:
+1. The first subtrigger `%s` matches, so we move the head of our matcher to the left like so:
 `$ 3 * \frac{\pi}{2}`|` `
 
 2. the we look at the next subtrigger: `#`. This indicates that we are trying to match a simple math group. Now things get interesting:
@@ -244,11 +247,20 @@ local simple_groups = {
 }
 ```
 
-2. 1. we look at the first pattern: `\\%a+%s?%b{}%s?%b{}`. It matches so we move the head acordingly:
-
+2. 1. we look at the first pattern: `\\%a+%s?%b{}%s?%b{}`. It matches so we move the head accordingly:
 `$ 3 * `|`\frac{\pi}{2} `
 
-3. Now we look at the next subtrigger:
+3. Now we look at the next subtrigger: `s?%*%s?`. It matches so we move the head accordingly:
+`$ 3`|` * \frac{\pi}{2} `
+
+4. The last subtrigger is `#`: We hit a math group again. We try to match patterns from the table in decending priority:
+
+4. 1. `\\%a+%s?%b{}%s?%b{}` -> no match
+4. 2. `\\%a+%s?%b{}` -> no match
+4. 3. `\\%a+` -> no match
+4. 4. `[%a%d]+` -> **match** -> we move the head accordingly: `$ `|`3 * \frac{\pi}{2} `
+
+All subtriggers matched -> The whole trigger matched -> we return `3 * \frac{\pi}{2} ` as the match.
 
 ### advanced math groups
 

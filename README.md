@@ -207,5 +207,28 @@ mgsnip("#ag", "\\langle <>\\rangle", { cap(1) }, math)
 
 the following sections go into detail about how the matcher behind the `mgsnip` (**m**ath **g**roup **snip**pet) works.
 
+### simple math groups
+I devide this section into two parts. I will first talk about groups that are matched via a single `lua pattern` and then about delimiter based matching. To make following along easier, I recommend you get familiar with the basics of lua pattern matching.
+
+I will only sketch the algorithm but please feel free to look at the actual implemtation for the details.
+To illustrate the working of the simple group matcher, lets look at the trigger `#%s?%*%s?#%s`.
+Suppose the state of our editor is the following
+```latex
+$ 3 * \frac{\pi}{2} _
+```
+The matcher now has to determine if our trigger matches or not.
+
+This first step in the matching process is to split the trigger into multiple parts like so:
+```lua
+subtriggers = { "#", "%s?%*%s?", "#", "%s"}
+```
+
+We now start matching the subtriggers against our line from right to left.
+We match `%s`, so we move the head `|` of our matcher like so.
+`$ 3 * \frac{\pi}{2}| `
+
+the we look at the next subtrigger: `#`. This indicates that we are trying to match a math group. Now things get interesting:
+
+
 ### advanced math groups
 

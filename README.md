@@ -132,9 +132,80 @@ This is where writing a custom trigger engine for Luasnip comes into play.
 ### Default
 To get an idea of what a trigger engine does, take a look at the following example. It implements the behaviour of the default engine.
 
+```lua
+local function default_matcher(line_to_cursor, trigger)
+    local find_res = { line_to_cursor:find(trigger .. "$") }
+    if #find_res > 0 then
+        local captures = {}
+        local from = find_res[1]
+        local match = line_to_cursor:sub(from, #line_to_cursor)
+        for i = 3, #find_res do
+            captures[i - 2] = find_res[i]
+        end
+        return match, captures
+    else
+        return nil
+    end
+end
+```
+Our custom matcher must return the part of the line that matched, as well as all captures.
 
 ### don't expand behind backslashes
 
-### simple math groups
+In LaTex we do not want to expand autosnippets if the word under cursor starts with a backslash.
+To achieve that we can just perform a check befor the actual matching to see if the last word starts with a backlash.
+If so we abort the match and return `nil`.
+
+```lua
+local function latex_matcher(line_to_cursor, trigger)
+    local tex_command = { line_to_cursor:find("\\%a*$") }
+    if #tex_command > 0 then
+        return nil
+    end
+    local find_res = { line_to_cursor:find(trigger .. "$") }
+    if #find_res > 0 then
+        local captures = {}
+        local from = find_res[1]
+        local match = line_to_cursor:sub(from, #line_to_cursor)
+        for i = 3, #find_res do
+            captures[i - 2] = find_res[i]
+        end
+        return match, captures
+    else
+        return nil
+    end
+end
+```
+
+### Intro
+
+The goal: Suppose we have a snippet that adds angle bracket around the last expression before the cursor. More concretely
+
+Lets say the current line looks like this
+```latex
+$ foo + bar - \pi _$
+```
+And let "_" be the cursor position
+
+We want to be able to press "ag" in order to add angle brackets. So
+
+```latex
+foo + bar - \pi ag_$
+```
+should turn into
+```latex
+foo + bar - \langle \pi \rangle_$
+```
+
+Now suppose we want to do this not just for "\pi", but also for "\frac{}{}", "(2 + i)", "|x-y|" and so on.
+
+FasTex provides a snippet_factory that covers exactly that. I introduce "#" as a special character to match expressions that I call math groups.
+
+```lua
+mgsnip("#ag", "\\langle <>\\rangle", { cap(1) }, math)
+```
+
+the following sections go into detail about how the matcher behind the mgsnip works.
 
 ### advanced math groups
+

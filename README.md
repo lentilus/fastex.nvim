@@ -4,7 +4,7 @@ This project expands on the work of Gilles Castel and ejmastnak.
 FasTex speed up typesetting in *Tex in nvim with LuaSnip and vimtex.
 
 - a powerful and customizable snippet engine for *Tex specifically.
-- usefull LuaSnip utilities
+- useful LuaSnip utilities
 - tons of predefined auto-snippets
 
 ## before we start
@@ -37,7 +37,7 @@ FasTex adds this hook by default but you can disable it by setting the `break_un
 ### traversing tabstops / insert nodes
 
 By default all snippets add a tabstop at the end of the expanded snippet.
-This is very usefull for traversing your code.
+This is very useful for traversing your code.
 When expanding snippets inside the inser nodes of other snippets it happens, that tabstops from two snippets overlap.
 This can be annoying because when you call the normal `ls.jump(1)` your cursor position does not change.
 To mitigate this, I wrote the below function so you dont have to jump more than once to get to the next "interesting" insert.
@@ -120,7 +120,7 @@ local my_snip = snip_factory(my_engine)
 my_snip("(%w)(%s)", "$<>$<>", { cap(1), cap(2) }, not_math)
 ```
 
-This pseudo-code as we have not defined `my_engine` and `not_math` yet.
+This is just pseudo-code to illustrate the idea. We have not defined `my_engine` and `not_math` yet.
 In theory it could be used to put standalone characters in math mode, so we can type the much shorter `x ` instead of `\$x\$ `.
 > In `my_engine` we could make sure not to match `I` and `a` as they are used in "normal" language.
 
@@ -210,6 +210,8 @@ the following sections go into detail about how the matcher behind the `mgsnip` 
 ### simple math groups
 I devide this section into two parts. I will first talk about groups that are matched via a single `lua pattern` and then about delimiter based matching. To make following along easier, I recommend you get familiar with the basics of lua pattern matching.
 
+#### pattern based math matching
+
 I will only sketch the algorithm but please feel free to look at the actual implemtation for the details.
 To illustrate the working of the simple group matcher, lets look at the following trigger:
 ```lua
@@ -221,7 +223,7 @@ $ 3 * \frac{\pi}{2} _
 ```
 The matcher now has to determine if our trigger matches or not.
 
-This first step in the matching process is to split the trigger into multiple parts like so:
+This first step in the matching process is to split the trigger into multiple parts. We want to treat special characters like `#` sperately so we split the string accordingly.
 ```lua
 subtriggers = { "#", "%s?%*%s?", "#", "%s"}
 ```
@@ -252,7 +254,7 @@ We look at the first pattern: `\\%a+%s?%b{}%s?%b{}`. It matches so we move the h
 3. Now we look at the next subtrigger: `s?%*%s?`. It matches so we move the head accordingly:
 `$ 3`|` * \frac{\pi}{2} `
 
-4. The last subtrigger is `#`: We hit a math group again. We try to match patterns from the table in decending priority:
+4. The last subtrigger is `#`: We hit a math group again. We try to match patterns from the table in decending priority, as soon as we hit a match, we submit it:
 
    1. `\\%a+%s?%b{}%s?%b{}` -> no match
    2. `\\%a+%s?%b{}` -> no match
@@ -265,10 +267,51 @@ All subtriggers matched -> The whole trigger matched -> we return `3 * \frac{\pi
 
 With such a trigger engine we can define powerful snippets that make manipulating latex so much nicer!
 
-But there is more: We now look at a delimiter based matching approach in order to capture expressions like
+But there is more:
+
+#### Delimiter based math matching
+
+We now look at a delimiter based matching approach in order to capture expressions like
 `\left( ... \right)`, `\rangle ... \langle`, `\begin{...} ... \end{...}`
 
 ### advanced math groups
 
 There are cases where simple patterns and delimiter patterns arent versitile enough:
 
+## Predefined Snippets
+
+## My personal configuration
+
+I recommend something like the following configuration with lazy:
+
+```lua
+{
+    dir = "~/git/fastex.nvim",
+    ft = { "latex", "tex" },
+    dependencies = {
+        {
+            "lervag/vimtex",
+            init = function()
+                -- your vimtex config could go here
+            end,
+        },
+        "L3MON4D3/LuaSnip",
+    },
+    config = function()
+        -- LuaSnip
+        local ls = require "luasnip"
+        ls.config.set_config {
+            history = true,
+            updateevents = "TextChanged,TextChangedI",
+            enable_autosnippets = true,
+            store_selection_keys = "<Tab>"
+        }
+
+        -- FasTeX
+        local ft = require("fastex")
+        ft.setup()
+        vim.keymap.set({ "n", "i", "s" }, "<M-j>", function() ft.smart_jump(1) end)
+        vim.keymap.set({ "n", "i", "s" }, "<M-k>", function() ft.smart_jump(-1) end)
+    end
+}
+```

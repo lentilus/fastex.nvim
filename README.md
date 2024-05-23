@@ -179,15 +179,17 @@ end
 
 ### Intro
 
-The goal: Suppose we have a snippet that adds angle bracket around the last expression before the cursor. More concretely
+We want to define snippets that are able to manipulate coherent mathematical expressions in a smart way. What do I mean by that?
+Lets look at an example:
+Suppose we have a snippet that adds angle bracket around the last expression before the cursor.
+More concretely: Lets say the current line looks like this
 
-Lets say the current line looks like this
 ```latex
 $ foo + bar - \pi _$
 ```
 And let `_` be the cursor position
 
-We want to be able to press `ag` in order to add angle brackets. So
+We want to define a snippet, so that we can type `ag` in order to add angle brackets around the last expression in this case `pi`. So
 
 ```latex
 $ foo + bar - \pi ag_$
@@ -197,15 +199,47 @@ should turn into
 $ foo + bar - \langle \pi \rangle_$
 ```
 
-Now suppose we want to do this not just for `\pi`, but also for `\frac{}{}`, `(2 + i)`, `|x-y|` and so on.
-
-FasTex provides a snippet factory that covers exactly that. I introduce `#` as a special character to match expressions that I call math groups.
+Notice, that we do not want to include `foo + bar` in our angle brackets, as `pi` is an atomic expression of its own. In essence we want to capture mathematical expressions, where we can be certain that they are meant to be treated as one object.
+This include all kinds of expressions such as:
+- `x`
+- `ab`
+- `f(2x)`
+- `\pi`
+- `\frac{foo}{bar}^2`
+- `\Mat(n \times n; \K)_{i,j}`
+where we can be certain that they should not be split during snippet expansion.
+Having snippets that can operate on such objects is really powerful. Suppose we can define a snippet:
 
 ```lua
-mgsnip("#ag", "\\langle <>\\rangle", { cap(1) }, math)
+-- an actual snippet in my colllection
+-- mgsnip : math group snippet
+mgsnip("@,?%s?@sa", "\\langle <>,<>\\rangle", { cap(2), cap(1) }, math)
 ```
 
-the following sections go into detail about how the matcher behind the `mgsnip` (**m**ath **g**roup **snip**pet) works.
+Where `@` is a placeholder for a mathematical expression.
+Then this snippet would allow us to write the dotproduct from two expression very easily in a post-fix style.
+If you had not already - I hope you are now getting an idea of how powerful such snippets are, as they allow much more involved handling of expressions than basic regex-trigger snippets.
+
+From now on I will call the mathematical expressions denoted by `@` groups.
+We want to treat groups atomic in the way that they are the largest group that does not make sence splitting further.
+(Not stricly mathematically speaking but in terms of content.)
+
+Defining a snippet with said functionality requires the snippet logic to litely take latexes syntax into account.
+
+In FasTex I implemented such logic in the from of a custom trigger engine.
+The following sections will into detail about its logic and the ideas behind it.
+
+<!---->
+<!---->
+<!-- As you can imagine, creating a snippet with said functionalty requires  -->
+<!-- I hope I have illustrated -->
+<!-- FasTex provides a snippet factory that covers exactly that. I introduce `#` as a special character to match expressions that I call math groups. -->
+<!---->
+<!-- ```lua -->
+<!-- mgsnip("#ag", "\\langle <>\\rangle", { cap(1) }, math) -->
+<!-- ``` -->
+<!---->
+<!-- the following sections go into detail about how the matcher behind the `mgsnip` (**m**ath **g**roup **snip**pet) works. -->
 
 ### simple math groups
 I devide this section into two parts. I will first talk about groups that are matched via a single `lua pattern` and then about delimiter based matching. To make following along easier, I recommend you get familiar with the basics of lua pattern matching.

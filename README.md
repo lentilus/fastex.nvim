@@ -207,8 +207,8 @@ This include all kinds of expressions such as:
 - `\pi`
 - `\frac{foo}{bar}^2`
 - `\Mat(n \times n; \K)_{i,j}`
-where we can be certain that they should not be split during snippet expansion.
-Having snippets that can operate on such objects is really powerful. Suppose we can define a snippet:
+
+Having snippets that can operate on such objects is really powerful. Suppose we can define very general snippets like this one:
 
 ```lua
 -- an actual snippet in my colllection
@@ -216,33 +216,26 @@ Having snippets that can operate on such objects is really powerful. Suppose we 
 mgsnip("@,?%s?@sa", "\\langle <>,<>\\rangle", { cap(2), cap(1) }, math)
 ```
 
-Where `@` is a placeholder for a mathematical expression.
+Where `@` is a placeholder for an abitrary mathematical expression.
 Then this snippet would allow us to write the dotproduct from two expression very easily in a post-fix style.
 If you had not already - I hope you are now getting an idea of how powerful such snippets are, as they allow much more involved handling of expressions than basic regex-trigger snippets.
 
-From now on I will call the mathematical expressions denoted by `@` groups.
+From now on I will call the mathematical expressions denoted by `@` "groups".
 We want to treat groups atomic in the way that they are the largest group that does not make sence splitting further.
 (Not stricly mathematically speaking but in terms of content.)
 
-Defining a snippet with said functionality requires the snippet logic to litely take latexes syntax into account.
+Defining a snippet with said functionality requires the snippet logic to litely take LaTex's syntax into account.
 
 In FasTex I implemented such logic in the from of a custom trigger engine.
 The following sections will into detail about its logic and the ideas behind it.
 
-<!---->
-<!---->
-<!-- As you can imagine, creating a snippet with said functionalty requires  -->
-<!-- I hope I have illustrated -->
-<!-- FasTex provides a snippet factory that covers exactly that. I introduce `#` as a special character to match expressions that I call math groups. -->
-<!---->
-<!-- ```lua -->
-<!-- mgsnip("#ag", "\\langle <>\\rangle", { cap(1) }, math) -->
-<!-- ``` -->
-<!---->
-<!-- the following sections go into detail about how the matcher behind the `mgsnip` (**m**ath **g**roup **snip**pet) works. -->
-
 ### simple math groups
-I devide this section into two parts. I will first talk about groups that are matched via a single `lua pattern` and then about delimiter based matching. To make following along easier, I recommend you get familiar with the basics of lua pattern matching.
+Lets first look at simple math groups, denoted by a `#` in the trigger.
+These will lie the foundation for working with more complex groups `@`.
+
+There are two ways we can define a simple group.
+Either via delimiters that mark the boundaries of the set group or via a lua-pattern that matches the group entirely.
+For the following sections a basic understanding of pattern matching in lua is valuable.
 
 #### pattern based math matching
 

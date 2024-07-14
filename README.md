@@ -227,14 +227,14 @@ We want to treat groups atomic in the way that they are the largest group that d
 Defining a snippet with said functionality requires the snippet logic to litely take LaTex's syntax into account.
 
 In FasTex I implemented such logic in the from of a custom trigger engine.
-The following sections will into detail about its logic and the ideas behind it.
+The following sections will go into detail about its logic and the ideas behind it.
 
 ### simple math groups
 Lets first look at simple math groups, denoted by a `#` in the trigger.
 These will lie the foundation for working with more complex groups `@`.
 
 There are two ways we can define a simple group.
-Either via delimiters that mark the boundaries of the set group or via a lua-pattern that matches the group entirely.
+Either via delimiters that mark the boundaries of the said group or via a lua-pattern that matches the group entirely.
 For the following sections a basic understanding of pattern matching in lua is valuable.
 
 #### pattern based math matching

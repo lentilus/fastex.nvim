@@ -7,8 +7,9 @@ local cap = helper.cap
 
 local snippets = {}
 local auto_backslash = {
-    "neg",
+    "in",
     "to",
+    "neg",
     "item",
     "sim",
     "ker",
@@ -24,7 +25,8 @@ local auto_backslash = {
     "Vol",
     "sin",
     "cos",
-    "tan"
+    "tan",
+    "mable"
 }
 
 for _, val in pairs(auto_backslash) do
@@ -32,13 +34,13 @@ for _, val in pairs(auto_backslash) do
 end
 
 return {
-    snip("fa", "\\forall ", {}, math),
-    snip("ex", "\\exists ", {}, math),
-    snip("in", "\\in ", {}, math),
-    snip("ni", "\\not\\in ", {}, math),
+    snip("fa", "\\forall", {}, math),
+    snip("ex", "\\exists", {}, math),
+    snip("ni", "\\not\\in", {}, math),
 
     -- logical chunks
-    snip("fen", "\\forall\\varepsilon>>0", {}, math), snip("fdn", "\\forall\\delta>>0", {}, math),
+    snip("fen", "\\forall\\varepsilon>>0", {}, math),
+    snip("fdn", "\\forall\\delta>>0", {}, math),
     snip("edd", "\\exists\\delta>>0", {}, math),
     snip("enn", "\\exists\\varepsilon>>0", {}, math),
 
@@ -59,10 +61,13 @@ return {
     snip("ne", "\\neq ", {}, math),
     snip("ge", "\\geq ", {}, math),
 
-    -- basic math operators
-    snip("ss", "+", {}, math),
-    snip("mm", "-", {}, math),
+    -- operators
+    snip("(.*)sk", "<>+", { cap(1) }, math, 1100),
+    snip("(.*)ak", "<>-", { cap(1) }, math, 1100),
+    snip("oak", "\\oplus ", {}, math),
+    snip("bak", "\\boxplus ", {}, math),
     snip("xx", "\\times ", {}, math),
+    snip("bxx", "\\boxtimes ", {}, math),
     snip("by", "\\cdot ", {}, math),
 
     -- sets
@@ -76,8 +81,12 @@ return {
     snip("seb", "\\subseteq ", {}, math),
     snip("nn", "\\cap ", {}, math),
     snip("uu", "\\cup ", {}, math),
-    snip("NN", "\\bigcap", {}, math, 1000),
-    snip("UU", "\\bigcup", {}, math, 1000),
+    snip("bnn", "\\bigcap", {}, math, 1000),
+    snip("buu", "\\bigcup", {}, math, 1000),
+    snip("snn", "\\cap ", {}, math),
+    snip("suu", "\\cup ", {}, math),
+    snip("bsnn", "\\bigcap", {}, math, 1000),
+    snip("bsuu", "\\bigcup", {}, math, 1000),
     snip("sem", "\\setminus ", {}, math),
 
     snip("mt", "\\mapsto ", {}, math),
@@ -86,8 +95,11 @@ return {
     snip("oo", "\\circ ", {}, math),
     snip("iso", "\\cong ", {}, math),
     snip("ddx", "\\frac{d<>}{d<>}", { i(1, "f"), i(2, "x") }, math),
+    snip("con", "\\contrain{<>}", { i(1) }, math),
 
     snip("it", "\\int_{<>}^{<>}", { i(1, "a"), i(2, "b") }, math),
+    snip("oit", "\\int_{\\Omega}", {}, math),
+    snip("dit", "\\int_{<>}", { i(1, "\\Omega") }, math), -- integral with Domain
     snip("sm", "\\sum_{<>}^{<>}", { i(1, "i=0"), i(2, "\\infty") }, math),
     snip("lim", "\\lim_{<> \\to <>}", { i(1, "x"), i(2, "\\infty") }, math),
     snip("ii", "\\infty", {}, math),
@@ -104,5 +116,7 @@ return {
     snip("eig", "\\Eig(<>,<>)", { i(1, "A"), i(2, "\\lambda") }, math),
     snip("mat", "\\Mat(<> \\times <>; <>)", { i(1, "n"), i(2, "n"), i(3, "\\K") }, math),
 
-    table.unpack(snippets)
+    snip("rn", "\\R^n", {}, math),
+
+    unpack(snippets)
 }

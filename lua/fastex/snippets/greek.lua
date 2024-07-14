@@ -42,5 +42,5 @@ for _, val in pairs(letters) do
 end
 
 return {
-    table.unpack(greek_snippets)
+    unpack(greek_snippets)
 }

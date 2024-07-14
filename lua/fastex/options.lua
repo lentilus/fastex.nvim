@@ -8,7 +8,8 @@ M.snippets = {
     "regex",
     "document",
     "matrix",
-    "subscript"
+    "subscript",
+    "texflash"
 }
 
 M.group_patterns = {

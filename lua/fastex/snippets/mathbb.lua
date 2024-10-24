@@ -8,7 +8,7 @@ local cap = helper.cap
 
 return {
 	snip("([A-Z])%1", "\\mathbb{<>}", { cap(1) }, math, 100),
-	snip("[A-Z]ca", "\\mathcal{<>}", { cap(1) }, math, 100),
+	snip("([A-Z])%s?ca", "\\mathcal{<>}", { cap(1) }, math, 100),
 
 	-- higher priority by default:
 	snip("CC", "\\C ", {}, math),

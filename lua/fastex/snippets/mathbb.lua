@@ -19,5 +19,5 @@ return {
 	snip("NN", "\\N ", {}, math),
 	snip("La", "\\La ", {}, math),
 
-	snip("(\\%a)%s?(%d)%s", "<>^<> ", { cap(1), cap(2) }, math),
+	snip("(\\%a)%s?(%d)%s", "<>^<> ", { cap(1), cap(2) }, math), -- quick \R^2 etc
 }

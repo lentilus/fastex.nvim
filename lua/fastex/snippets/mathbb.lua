@@ -1,6 +1,3 @@
-local ls = require("luasnip")
-local f = ls.function_node
-local i = ls.insert_node
 local helper = require("fastex.luasnip_helpers")
 local snip = helper.std_snip
 local math = helper.math
